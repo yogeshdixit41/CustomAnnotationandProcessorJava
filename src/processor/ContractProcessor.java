@@ -18,7 +18,7 @@ import annotations.Contract;
 
 
 @SupportedAnnotationTypes("src.annotations.Contract")
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 
 
 public class ContractProcessor extends AbstractProcessor {
@@ -32,7 +32,7 @@ public class ContractProcessor extends AbstractProcessor {
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		// TODO Auto-generated method stub
 		
-		processingEnv.getMessager().printMessage(Kind.NOTE, "Hello compile time message");
+		processingEnv.getMessager().printMessage(Kind.ERROR, "Hello compile time message");
 		
 		for (Element elem : roundEnv.getElementsAnnotatedWith(Contract.class)) {
 			if(elem.getKind() != ElementKind.METHOD)

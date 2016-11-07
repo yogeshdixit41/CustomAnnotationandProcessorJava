@@ -8,5 +8,6 @@ import java.lang.annotation.Target;
 public @interface Contract {
 		
 		String [] pre_cond ();
+		String [] post_cond();
         //String created();
  }
