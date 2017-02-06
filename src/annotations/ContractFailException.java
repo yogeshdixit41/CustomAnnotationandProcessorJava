@@ -1,6 +1,6 @@
 package annotations;
 
-public class ContractFailException extends Exception{
+public class ContractFailException extends RuntimeException{
 
 	/**
 	 * 
