@@ -1,7 +1,5 @@
 package annotations;
 
-import java.lang.reflect.Parameter;
-
 import com.ugos.jiprolog.engine.JIPEngine;
 import com.ugos.jiprolog.engine.JIPQuery;
 import com.ugos.jiprolog.engine.JIPSyntaxErrorException;
