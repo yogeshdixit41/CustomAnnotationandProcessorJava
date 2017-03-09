@@ -8,6 +8,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 public aspect asp
 {
+
 	JIPInitializer myJip	= new JIPInitializer();
 	//pointcut function () : execution (* *(..) ) ;
 	
@@ -54,7 +55,7 @@ public aspect asp
 			String [] post_cond = ((Contract)annost[0]).post_cond() ;
 			//System.out.println(post_cond[0]);
 			//System.out.println("----"+thisJoinPoint.getArgs()[0]);
-			myJip.checkPostCond(post_cond[0], (int)objret);
+			myJip.checkPostCondListOrdered(post_cond[0], objret);
 		}
 		
 	}
