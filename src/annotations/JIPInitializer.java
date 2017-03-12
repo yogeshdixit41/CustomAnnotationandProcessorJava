@@ -67,6 +67,22 @@ public class JIPInitializer {
 		}*/
 		
 	}
+	 
+	 public boolean checkPreCond(String queryString)
+	 {
+		 JIPQuery jipQuery = jip.openSynchronousQuery(queryString);
+			
+		boolean queryResult = readSolution(jipQuery);
+		if(queryResult)
+		{
+			System.out.println("Given preconditions are satisfied");
+			return true;
+		}
+		else
+		{
+			throw new ContractFailException("Contract failure : preconditions failed");
+		}
+	 }
 
 	 
 		/**

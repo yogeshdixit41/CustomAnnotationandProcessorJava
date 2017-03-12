@@ -4,40 +4,43 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method ;
 
 import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 
 public aspect asp
 {
 
 	JIPInitializer myJip	= new JIPInitializer();
-	//pointcut function () : execution (* *(..) ) ;
 	
-	pointcut function () : @annotation(Contract) ;
+	pointcut function2 () : execution (* *(..) ) ; // pointcut to catch execution context	
+	pointcut function () : @annotation(Contract); // pointcut to catch annotations from the code
 
-	before () : function ()
+	// joining both the pointcuts it will catch annotations in the execution context
+	before () : function() && function2() 
 	{
 		Signature sig = thisJoinPoint.getSignature () ;
 		Method method = (( MethodSignature )sig).getMethod () ;
-		//System.out.println(method.getName());
-		// Annotations for @Contract
+		String[] parameterNames = ((CodeSignature)sig).getParameterNames();
+		Object[] arguements = thisJoinPoint.getArgs();
+
 		
 		Annotation [] annost = method.getDeclaredAnnotationsByType(Contract.class) ;
-		
-		if(annost.length > 0)
+		for(int i=0; i < annost.length; i++)
 		{
-			String [] pre_cond = ((Contract)annost[0]).pre_cond() ;
-			//System.out.println(pre_cond[0]);
-			//System.out.println("----"+thisJoinPoint.getArgs()[0]);
-			myJip.checkPreCond(pre_cond[0], thisJoinPoint.getArgs()[0]);
-		}
-		
-		/*Annotation [] annost = method.getDeclaredAnnotations () ;
-		
-		Contract annos = ( Contract ) annost[0] ;
-		
-		//String [] invariant_cond = annos.invariant_cond () ;
-		String [] pre_cond = annos.pre_cond () ;*/
-		
+			String [] pre_cond = ((Contract)annost[i]).pre_cond() ;
+			for(int j = 0; j< pre_cond.length; j++)
+				for(int k=0; k<parameterNames.length;k++ )
+				{
+					//System.out.println("pre cond - " +i +"----"+ j + " --- "+ pre_cond[j]);
+					if(pre_cond[j].contains(parameterNames[k]))
+					{
+						pre_cond[j] = pre_cond[j].replace((CharSequence)parameterNames[k], (CharSequence)arguements[k].toString());
+						myJip.checkPreCond(pre_cond[j]);
+						//System.out.println("arguements : " + parameterNames[k]+ "--" + arguements[k] + "re_cond"+ pre_cond[j]);
+					}
+						
+				}
+		}		
 	}
 	
 	
@@ -45,8 +48,6 @@ public aspect asp
 	{
 		Signature sig = thisJoinPoint.getSignature () ;
 		Method method = (( MethodSignature )sig).getMethod () ;
-		//System.out.println(method.getName());
-		// Annotations for @Contract
 		
 		Annotation [] annost = method.getDeclaredAnnotationsByType(Contract.class) ;
 		
