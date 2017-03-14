@@ -11,7 +11,21 @@ public class Bank {
 		this.balance = 0.0;
 	}
 	
-	@Contract(pre_cond = { "nonnegative(amount)", "lessThan(amount, balance)" }, post_cond = { "checkbalance(amount, returnValue)" })
+	/**
+	 * @return the balance
+	 */
+	public Double getBalance() {
+		return balance;
+	}
+
+	/**
+	 * @param balance the balance to set
+	 */
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	@Contract(pre_cond = { "nonnegative(amount)", "lessThan(amount, @balance)" }, post_cond = { "checkbalance(amount, returnValue)" }, source_files = { "custLib.pl" })
 	public double withdraw(Double amount)
 	{
 		this.balance = balance - amount;

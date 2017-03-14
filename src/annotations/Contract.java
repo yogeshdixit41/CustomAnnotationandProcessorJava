@@ -12,5 +12,6 @@ public @interface Contract {
 		
 		String [] pre_cond ();
 		String [] post_cond();
+		String [] source_files() default "";
         //String created();
  }

@@ -22,14 +22,27 @@ public class JIPInitializer {
 			 * this should be converted to
 			 * it should consider all the pl files found at build path
 			 */
-			jip.compileFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.pl");
-			jip.loadFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.jip");
+			//jip.compileFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.pl");
+			//jip.loadFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.jip");
 		}
 		catch(JIPSyntaxErrorException ex)
 		{
 		    // there is a syntax error in the query
 		    //ex.printStackTrace();
 		    System.exit(0);
+		}
+	}
+	
+	public void loadFile(String fileName)
+	{
+		try
+		{
+			jip.consultFile(fileName);
+		}
+		catch(JIPSyntaxErrorException ex)
+		{
+			System.out.println("Exception loading prolog file : " + ex.getMessage());
+			System.exit(0);
 		}
 	}
 	
