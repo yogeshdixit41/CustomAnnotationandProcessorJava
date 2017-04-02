@@ -25,14 +25,14 @@ public class Bank {
 		this.balance = balance;
 	}
 
-	@Contract(pre_cond = { "nonnegative(amount)", "lessThan(amount, @balance)" }, post_cond = { "checkbalance(amount, returnValue)" }, source_files = { "custLib.pl" })
+	@Contract(pre_cond = { "isPositive(amount)", "lessThan(amount, @balance)" }, post_cond = { "checkbalance(ans)" })
 	public double withdraw(Double amount)
 	{
 		this.balance = balance - amount;
 		return balance;
 	}
 	
-	@Contract(pre_cond = { "nonnegative(amount)" }, post_cond = { "checkbalance(amount, returnValue)" })
+	@Contract(pre_cond = { "nonnegative(amount)" , "maxLimitNotBreached(amount)"}, post_cond = { "checkbalance(ans)" })
 	public double deposit(Double amount)
 	{
 		this.balance = balance + amount;
@@ -42,7 +42,7 @@ public class Bank {
 	public static void main(String [] args)
 	{
 		Bank newAccount = new Bank("Test Account");
-		newAccount.deposit(1000.00);
+		newAccount.deposit(100.00);
 		newAccount.withdraw(500.00);
 	}
 	

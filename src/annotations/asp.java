@@ -39,7 +39,8 @@ public aspect asp
 			System.out.println("Source File : " + source_files[0]);
 			for(int j=0; j< source_files.length;j++)
 			{
-				myJip.loadFile(source_files[j]);
+				if(!source_files[j].equals("no file to load"))
+					myJip.loadFile(source_files[j]);
 			}
 			
 			for(int j = 0; j< pre_cond.length; j++)
@@ -72,6 +73,52 @@ public aspect asp
 	
 	after () returning ( Object objret ): function ()
 	{
+		
+		Signature sig = thisJoinPoint.getSignature () ;
+		Method method = (( MethodSignature )sig).getMethod () ;
+		//String[] parameterNames = ((CodeSignature)sig).getParameterNames();
+		//Object[] arguements = thisJoinPoint.getArgs();
+		Object thisInstanceCallerClass = thisJoinPoint.getThis();
+		ArrayList<String> instanceVarNamesList = new ArrayList<>();
+		HashMap<String, Object> instanceVarNameToValue = new HashMap<>();
+
+		
+		Annotation [] annost = method.getDeclaredAnnotationsByType(Contract.class) ;
+		for(int i=0; i < annost.length; i++)
+		{
+			String [] post_cond = ((Contract)annost[i]).post_cond() ;
+			String [] source_files = ((Contract)annost[i]).source_files();
+			
+			System.out.println("Source File : " + source_files[0]);
+			for(int j=0; j< source_files.length;j++)
+			{
+				if(!source_files[j].equals("no file to load"))
+					myJip.loadFile(source_files[j]);
+			}
+			
+			for(int j = 0; j< post_cond.length; j++)
+			{
+				instanceVarNamesList = getInstanceVariableNames(post_cond[j]);
+				instanceVarNameToValue = getInstanceValues(instanceVarNamesList, thisInstanceCallerClass);
+				
+				for(String instanceVarName: instanceVarNameToValue.keySet())
+				{
+					if(post_cond[j].contains("@"+instanceVarName))
+					{
+						post_cond[j] = post_cond[j].replace((CharSequence)("@"+instanceVarName), (CharSequence)instanceVarNameToValue.get(instanceVarName).toString());
+					}
+				}
+				if(post_cond[j].contains("ans"))
+				{
+					post_cond[j] = post_cond[j].replace((CharSequence)"ans", (CharSequence)objret.toString());
+				}
+					
+				System.out.println("Post condition : " + post_cond[j]);
+				myJip.checkPostCond(post_cond[j]);
+			}
+		}
+		/*
+		//Old working code
 		Signature sig = thisJoinPoint.getSignature () ;
 		Method method = (( MethodSignature )sig).getMethod () ;
 		
@@ -83,7 +130,7 @@ public aspect asp
 			//System.out.println(post_cond[0]);
 			//System.out.println("----"+thisJoinPoint.getArgs()[0]);
 			myJip.checkPostCondListOrdered(post_cond[0], objret);
-		}
+		}*/
 		
 	}
 	

@@ -22,6 +22,8 @@ public class JIPInitializer {
 			 * this should be converted to
 			 * it should consider all the pl files found at build path
 			 */
+			//System.out.println(this.getClass().getResourceAsStream("/defaul_prolog_library.pl").toString());
+			jip.consultFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\AnnotationsExample\\default_prolog_library.pl");
 			//jip.compileFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.pl");
 			//jip.loadFile("C:\\My Files\\Studies\\MasterThesisProject\\EclipseWorkSPace\\TestJIPProject\\src\\com\\yd\\contractprogramming\\factorial.jip");
 		}
@@ -29,6 +31,7 @@ public class JIPInitializer {
 		{
 		    // there is a syntax error in the query
 		    //ex.printStackTrace();
+			System.out.println("Exception loading prolog file : " + ex.getMessage());
 		    System.exit(0);
 		}
 	}
@@ -52,7 +55,7 @@ public class JIPInitializer {
 	 * @param var
 	 * @return
 	 */
-	 public boolean checkPreCond(String string, Object var) throws ContractFailException{
+	/* public boolean checkPreCond(String string, Object var) throws ContractFailException{
 		// TODO Auto-generated method stub
 		String queryString = "nonnegative(" + (int)var + ").";
 		System.out.println("QS : " + queryString);
@@ -71,15 +74,8 @@ public class JIPInitializer {
 		else
 		{
 			throw new ContractFailException("Contract failure : preconditions failed");
-		}
-		/*// Loop while there is another solution
-		while (jipQuery.hasMoreChoicePoints())
-		{
-		    System.out.println("Solution : "+ solution);
-		    solution = jipQuery.nextSolution();
-		}*/
-		
-	}
+		}		
+	}*/
 	 
 	 public boolean checkPreCond(String queryString)
 	 {
@@ -93,7 +89,23 @@ public class JIPInitializer {
 		}
 		else
 		{
-			throw new ContractFailException("Contract failure : preconditions failed");
+			throw new ContractFailException("Contract failure : preconditions failed for " + queryString);
+		}
+	 }
+	 
+	 public boolean checkPostCond(String queryString)
+	 {
+		 JIPQuery jipQuery = jip.openSynchronousQuery(queryString);
+			
+		boolean queryResult = readSolution(jipQuery);
+		if(queryResult)
+		{
+			System.out.println("Given postconditions are satisfied");
+			return true;
+		}
+		else
+		{
+			throw new ContractFailException("Contract failure : postcondition failed for " + queryString);
 		}
 	 }
 
@@ -104,7 +116,7 @@ public class JIPInitializer {
 		 * @param var
 		 * @return
 		 */
-		 public boolean checkPostCond(String string, Object var) throws ContractFailException {
+		/* public boolean checkPostCond(String string, Object var) throws ContractFailException {
 			// TODO Auto-generated method stub
 			String queryString = "nonzero(" + var + ").";
 			System.out.println("QS : " + queryString);
@@ -126,9 +138,9 @@ public class JIPInitializer {
 				throw new ContractFailException("Contract failure : postconditions failed");
 			}
 			
-		}
+		}*/
 		 
-		 public boolean checkPostCondListOrdered(String funName, Object var) throws ContractFailException {
+		 /*public boolean checkPostCondListOrdered(String funName, Object var) throws ContractFailException {
 				// TODO Auto-generated method stub
 			 String queryString = "";
 			 	if(funName.contains("nonzero"))
@@ -163,7 +175,7 @@ public class JIPInitializer {
 					throw new ContractFailException("Contract failure : postconditions failed");
 				}
 				
-			}	 
+			}*/	 
 	 
 	 
 	public boolean readSolution(JIPQuery jq)
