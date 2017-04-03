@@ -45,27 +45,47 @@ public aspect asp
 			
 			for(int j = 0; j< pre_cond.length; j++)
 			{
-				instanceVarNamesList = getInstanceVariableNames(pre_cond[j]);
-				instanceVarNameToValue = getInstanceValues(instanceVarNamesList, thisInstanceCallerClass);
-				
-				for(String instanceVarName: instanceVarNameToValue.keySet())
+				if(!pre_cond[j].equals("") && pre_cond[j] != null)
 				{
-					if(pre_cond[j].contains("@"+instanceVarName))
+					instanceVarNamesList = getInstanceVariableNames(pre_cond[j]);
+					instanceVarNameToValue = getInstanceValues(instanceVarNamesList, thisInstanceCallerClass);
+					
+					for(String instanceVarName: instanceVarNameToValue.keySet())
 					{
-						pre_cond[j] = pre_cond[j].replace((CharSequence)("@"+instanceVarName), (CharSequence)instanceVarNameToValue.get(instanceVarName).toString());
+						if(pre_cond[j].contains("@"+instanceVarName))
+						{
+							Object instanceObject = instanceVarNameToValue.get(instanceVarName);
+							String valueString = "";
+							if(instanceObject instanceof int[])
+								valueString = convertArrayObjectToString((int[])instanceObject);
+							else
+								valueString = instanceObject.toString();
+							pre_cond[j] = pre_cond[j].replace((CharSequence)("@"+instanceVarName), (CharSequence)valueString);
+						}
 					}
-				}
-				for(int k=0; k<parameterNames.length;k++ )
-				{
-					//System.out.println("pre cond - " +i +"----"+ j + " --- "+ pre_cond[j]);
-					if(pre_cond[j].contains(parameterNames[k]))
+					for(int k=0; k<parameterNames.length;k++ )
 					{
-						pre_cond[j] = pre_cond[j].replace((CharSequence)parameterNames[k], (CharSequence)arguements[k].toString());
-						//System.out.println("arguements : " + parameterNames[k]+ "--" + arguements[k] + "re_cond"+ pre_cond[j]);
+						//System.out.println("pre cond - " +i +"----"+ j + " --- "+ pre_cond[j]);
+						if(pre_cond[j].contains(parameterNames[k]))
+						{
+							Object instanceObject = arguements[k];
+							String valueString = "";
+							if(instanceObject instanceof int[])
+							{
+								System.out.println("Inside if -- ---- ---- ---");
+								valueString = convertArrayObjectToString((int[])instanceObject);
+							}
+								
+							else
+								valueString = instanceObject.toString();
+							pre_cond[j] = pre_cond[j].replace((CharSequence)parameterNames[k], (CharSequence)valueString);
+							//System.out.println("arguements : " + parameterNames[k]+ "--" + arguements[k] + "re_cond"+ pre_cond[j]);
+						}
 					}
+					
+					myJip.checkPreCond(pre_cond[j]);
 				}
 				
-				myJip.checkPreCond(pre_cond[j]);
 			}
 		}		
 	}
@@ -98,23 +118,43 @@ public aspect asp
 			
 			for(int j = 0; j< post_cond.length; j++)
 			{
-				instanceVarNamesList = getInstanceVariableNames(post_cond[j]);
-				instanceVarNameToValue = getInstanceValues(instanceVarNamesList, thisInstanceCallerClass);
-				
-				for(String instanceVarName: instanceVarNameToValue.keySet())
+				if(!post_cond[j].equals("") && post_cond[j] != null)
 				{
-					if(post_cond[j].contains("@"+instanceVarName))
-					{
-						post_cond[j] = post_cond[j].replace((CharSequence)("@"+instanceVarName), (CharSequence)instanceVarNameToValue.get(instanceVarName).toString());
-					}
-				}
-				if(post_cond[j].contains("ans"))
-				{
-					post_cond[j] = post_cond[j].replace((CharSequence)"ans", (CharSequence)objret.toString());
-				}
+					instanceVarNamesList = getInstanceVariableNames(post_cond[j]);
+					instanceVarNameToValue = getInstanceValues(instanceVarNamesList, thisInstanceCallerClass);
 					
-				System.out.println("Post condition : " + post_cond[j]);
-				myJip.checkPostCond(post_cond[j]);
+					for(String instanceVarName: instanceVarNameToValue.keySet())
+					{
+						if(post_cond[j].contains("@"+instanceVarName))
+						{
+							Object instanceObject = instanceVarNameToValue.get(instanceVarName);
+							String valueString = "";
+							if(instanceObject instanceof int[])
+								valueString = convertArrayObjectToString((int[])instanceObject);
+							else
+								valueString = instanceObject.toString();
+							post_cond[j] = post_cond[j].replace((CharSequence)("@"+instanceVarName), (CharSequence)valueString);
+						}
+					}
+					if(post_cond[j].contains("ans"))
+					{
+						Object instanceObject = objret;
+						String valueString = "";
+						if(instanceObject instanceof int[])
+						{
+							System.out.println("Inside if -- ---- ---- ---");
+							valueString = convertArrayObjectToString((int[])instanceObject);
+						}
+							
+						else
+							valueString = instanceObject.toString();
+						post_cond[j] = post_cond[j].replace((CharSequence)"ans", (CharSequence)valueString);
+					}
+						
+					System.out.println("Post condition : " + post_cond[j]);
+					myJip.checkPostCond(post_cond[j]);
+				}
+				
 			}
 		}
 		/*
@@ -144,7 +184,7 @@ public aspect asp
 		{
 			eachcontractParam = eachcontractParam.trim();
 			if(eachcontractParam.startsWith("@") && eachcontractParam.length() > 1)
-				instanceVariableNames.add(eachcontractParam.substring(1, eachcontractParam.length()));
+				instanceVariableNames.add(eachcontractParam.substring(1, eachcontractParam.length())); //add the name of the instance variable trimming the @ char
 		}
 		
 		return instanceVariableNames;
@@ -171,6 +211,22 @@ public aspect asp
 			}
 		}catch(Exception e){}
 		return instanceNameToValue;
+	}
+	
+	public String convertArrayObjectToString(int[] arrayObject)
+	{
+		String finalString = "[";
+		
+		for(Object eachValue : arrayObject)
+		{
+			finalString += eachValue + ",";
+		}
+		
+		if(finalString.length() > 1)
+			finalString = finalString.substring(0, finalString.length()-1);
+		finalString += "]";
+		
+		return finalString;
 	}
 	
 }

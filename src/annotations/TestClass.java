@@ -24,21 +24,21 @@ public class TestClass {
 	}
 	
 	
-//	@Contract(pre_cond = { "nonnegative(var)" }, post_cond = { "ordered(ans)" })
-//	public static int[] print2(int var)
-//	{
-//		System.out.println("In print1 : " + var);
-//		int[] l = {1,2,3,4};
-//		return l;
-//	}
-	
+	@Contract(pre_cond = { "ordered(var)" }, post_cond = { "ordered(ans)" })
+	public static int[] print2(int [] var)
+	{
+		System.out.println("In print1 : " + var);
+		int[] l = {1,2,3,4};
+		return l;
+	}	
 	
 	public static void main(String[] args)
 	{
-		TestClass obj = new TestClass(-11);
+		//TestClass obj = new TestClass(-11);
 		//obj.print1(5, -3);
 		print12(3);
-		//print2(4);
+		int [] l = {1,2,3,4};
+		print2(l);
 	}
 	
 }
