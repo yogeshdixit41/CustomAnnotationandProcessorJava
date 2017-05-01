@@ -36,7 +36,7 @@ public aspect asp
 			String [] pre_cond = ((Contract)annost[i]).pre_cond() ;
 			String [] source_files = ((Contract)annost[i]).source_files();
 			
-			System.out.println("Source File : " + source_files[0]);
+			//System.out.println("Source File : " + source_files[0]);
 			for(int j=0; j< source_files.length;j++)
 			{
 				if(!source_files[j].equals("no file to load"))
@@ -72,7 +72,7 @@ public aspect asp
 							String valueString = "";
 							if(instanceObject instanceof int[])
 							{
-								System.out.println("Inside if -- ---- ---- ---");
+								//System.out.println("Inside if -- ---- ---- ---");
 								valueString = convertArrayObjectToString((int[])instanceObject);
 							}
 								
@@ -109,7 +109,7 @@ public aspect asp
 			String [] post_cond = ((Contract)annost[i]).post_cond() ;
 			String [] source_files = ((Contract)annost[i]).source_files();
 			
-			System.out.println("Source File : " + source_files[0]);
+			//System.out.println("Source File : " + source_files[0]);
 			for(int j=0; j< source_files.length;j++)
 			{
 				if(!source_files[j].equals("no file to load"))
@@ -142,7 +142,7 @@ public aspect asp
 						String valueString = "";
 						if(instanceObject instanceof int[])
 						{
-							System.out.println("Inside if -- ---- ---- ---");
+							//System.out.println("Inside if -- ---- ---- ---");
 							valueString = convertArrayObjectToString((int[])instanceObject);
 						}
 							
@@ -151,7 +151,7 @@ public aspect asp
 						post_cond[j] = post_cond[j].replace((CharSequence)"ans", (CharSequence)valueString);
 					}
 						
-					System.out.println("Post condition : " + post_cond[j]);
+					//System.out.println("Post condition : " + post_cond[j]);
 					myJip.checkPostCond(post_cond[j]);
 				}
 				
@@ -198,17 +198,17 @@ public aspect asp
 		{
 			for(String nameVar : nameList)
 			{
-				System.out.println("Log1 : "+ nameVar);
+				//System.out.println("Log1 : "+ nameVar);
 				Field f = thisObject.getClass().getDeclaredField(nameVar);
 				f.setAccessible(true);
-				System.out.println("Log : "+ nameVar+ " Value : "+ f.get(thisObject));
+				//System.out.println("Log : "+ nameVar+ " Value : "+ f.get(thisObject));
 				instanceNameToValue.put(nameVar, f.get(thisObject));
 			}
 			
-			for(String eachKey : instanceNameToValue.keySet())
+			/*for(String eachKey : instanceNameToValue.keySet())
 			{
 				System.out.println("Log (privateVar name Value )"+ eachKey +" : " + instanceNameToValue.get(eachKey));
-			}
+			}*/
 		}catch(Exception e){}
 		return instanceNameToValue;
 	}

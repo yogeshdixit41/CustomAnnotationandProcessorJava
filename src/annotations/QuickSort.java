@@ -8,14 +8,13 @@ public class QuickSort {
 		this.arr= arr;
 	}
 	
-	@Contract(pre_cond = { "" }, post_cond = { "checkPivotValid(ans,@arr)." }, source_files = {"Sublist.pl"})
 	int partition(int low, int high)
 	{
 		int pivot = arr[high];
 		int i = (low-1);
 		for(int j=low;j<=high-1;j++)
 		{
-			if(arr[j] > pivot)
+			if(arr[j] <= pivot)
 			{
 				i++;
 				int temp = arr[i];
@@ -31,10 +30,17 @@ public class QuickSort {
 		return i+1;
 	}
 	
+	@Contract(pre_cond = { "" }, post_cond = { "checkPivotValid(ans,@arr)." }, source_files = {"Sublist.pl"})
+	int partitionWithCOntract(int low, int high)
+	{
+		return partition(low, high);
+	}
+	
 	void sort(int low, int high)
 	{
 		if(low < high)
 		{
+			//int pi = partitionWithCOntract(low,high);
 			int pi = partition(low,high);
 			
 			sort(low, pi-1);
@@ -51,7 +57,7 @@ public class QuickSort {
         System.out.println();
     }
  
-    // Driver program
+    
     public static void main(String args[])
     {
         int arr[] = {10, 7, 8, 9, 1, 5};
