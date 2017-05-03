@@ -3,6 +3,11 @@ sublist(S,M,N,[_A|B]):-
 	M<N, 
 	sublist(S,M-1,N-1,B).
 	
+sublist(S,M,N,[_A|B]):- 
+	M>0, 
+	M=N,
+	sublist(S,0,0,[B]).
+	
 sublist(S,M,N,[A|B]):- 
 	0 is M, 
 	M<N, 
@@ -14,11 +19,12 @@ sublist([],0,0,_).
 
 checkPivotValid(Pivotindex,List):-
 	Pindex is Pivotindex,
+	Pindexx is Pivotindex+1,
 	sublist(S,0,Pindex,List),
 	nth0(Pivotindex,List,Pivotelement),
 	check_prelist_util(S,Pivotelement),
 	countElements(List,Count),
-	sublist(N,Pindex+1,Count,List),
+	sublist(N,Pindexx,Count,List),
 	check_postlist_util(N,Pivotelement).
 	
 countElements([],0).
@@ -33,10 +39,12 @@ check_prelist_util([H|T], N) :-
 	
 check_prelist_util([H|[]], N) :-
     H =< N.
+check_prelist_util([], N).
 	
 check_postlist_util([H|T], N) :-
-    H > N,
+    H >= N,
     check_postlist_util(T, N).
 	
 check_postlist_util([H|[]], N) :-
-    H > N.
+    H >= N.
+check_postlist_util([], N).

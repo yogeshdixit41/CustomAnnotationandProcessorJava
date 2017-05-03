@@ -1,5 +1,8 @@
 package annotations;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class QuickSort {
 	int [] arr;
 	
@@ -60,12 +63,24 @@ public class QuickSort {
     
     public static void main(String args[])
     {
-        int arr[] = {10, 7, 8, 9, 1, 5};
+        int arr[] = new int[100];
         int n = arr.length;
- 
+        
+        Random rand = new Random();
+        for(int i=0; i< 100;i++)
+        {
+        	int  num = rand.nextInt(1000) + 1;
+        	arr[i] = num;
+        }
+        
+        long startTime = System.nanoTime();
         QuickSort ob = new QuickSort(arr);
         ob.sort(0, n-1);
- 
+        long elapsedTime = System.nanoTime() - startTime;
+        
+        System.out.println("Total execution time to create 1000K objects in Java in millis: "
+                + elapsedTime/1000000);
+        
         System.out.println("sorted array");
         ob.printArray();
     }
